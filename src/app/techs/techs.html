@@ -1,8 +1,47 @@
-<div class="techs-container">
-  <h2 class="techs-h2">
-    There's a couple places you can find me on the internet...
-  </h2>
+<div ng-controller="TechsController" class="techs-container">
+  <div class="title">
+    <h2 class="title-h2"> Just announced... </h2>
+  </div>
   <div class="techs">
-    <fountain-tech ng-repeat="tech in $ctrl.techs" tech="tech"></fountain-tech>
+    <!-- <fountain-tech ng-repeat="tech in $ctrl.techs" tech="tech"></fountain-tech> -->
+
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <a href="https://www.facebook.com/shandeezcollectiv/photos/br.Abo9JgeSIyU5vPUwHlgSbwLPbqtGMZzdD_uHKEJjwlgO45uxHJNlIry_nqO033u_aVZwZA2X7ITG33ThA9we4OSHDOu_17OXbIJ3HmyLCuLBdRR4FZihDULp5zZl08YTcAGXjQfa2gGWFEZLCDNcbbKB/1125826630847022/?type=3&theater">
+            <img ng-src="{{hrefEvent1Image}}" alt="music">
+          </a>
+          <div class="caption">
+            <h3>{{hrefEvent1Title}}</h3>
+            <p>{{hrefEvent1Date}}</p>
+            <p><a ng-href="{{hrefEvent1Link}}" class="btn btn-primary" role="button">Buy Tickets</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <a href="https://www.facebook.com/events/191386691268711/">
+            <img ng-src="{{hrefEvent2Image}}" alt="music">
+          </a>
+          <div class="caption">
+            <h3>{{hrefEvent2Title}}</h3>
+            <p>{{hrefEvent2Date}}</p>
+            <p><a ng-href="{{hrefEvent2Link}}" class="btn btn-primary" role="button">Buy Tickets</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <a href="https://www.facebook.com/events/304328829949985/">
+            <img ng-src="{{hrefEvent3Image}}" alt="music">
+          </a>
+          <div class="caption">
+            <h3>{{hrefEvent3Title}}</h3>
+            <p>{{hrefEvent3Date}}</p>
+            <p><a ng-href="{{hrefEvent3Link}}" class="btn btn-primary" role="button">Buy Tickets</a></p>
+          </div>
+        </div>
+      </div>
+
+
   </div>
 </div>

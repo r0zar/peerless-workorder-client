@@ -1,8 +1,14 @@
-<header class="header">
-  <p class="header-title">
-      Hi, I'm Ross Ragsdale!
+<header ng-controller="HeadController" class="header">
+  <span class="glyphicon glyphicon-align-justify" ng-click="openAside('left', true)"></span>
+  <p class="header-title" ng-click="goHome()">
+      <img class="header-title-img" ng-src="{{hrefLogo}}"/>
   </p>
+  <row>
   <p class="header-date">
-    Thanks for stopping by!
+    <a href="https://www.instagram.com/shandeezcollectiv/"><img class="insta-logo" ng-src="{{hrefSocialMedia1}}"/></a>
+    <a href="https://www.facebook.com/shandeezcollectiv"><img class="fb-logo" ng-src="{{hrefSocialMedia2}}"/></a>
+    <a href="http://www.shandeezcollectiv.com/"><img class="tumblr-logo" ng-src="{{hrefSocialMedia3}}"/></a>
   </p>
+</row>
+  &nbsp;
 </header>

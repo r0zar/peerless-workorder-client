@@ -1,42 +1,34 @@
 [
   {
-    "key": "linkedin",
-    "title": "LinkedIn",
+    "key": "asd",
+    "title": "Event 1",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png",
-    "text1": "My career network.",
-    "text2": "Professional experiences and projects are maintained on LinkedIn.  Don't be shy to drop by- I endorse back!",
+    "text1": "Nov 17",
+    "text2": "asd",
     "link": "https://www.linkedin.com/in/rossragsdale"
   },
   {
-    "key": "github",
-    "title": "Github",
+    "key": "asd",
+    "title": "Event 2",
     "logo": "http://s1.ibtimes.com/sites/www.ibtimes.com/files/styles/embed/public/2014/04/22/github-logo.png",
-    "text1": "How I build software.",
-    "text2": "I have a couple repos hosted there- this site included.  Although; the majority of my work is contributed to private repositories.",
+    "text1": "Nov 25",
+    "text2": "asd",
     "link": "https://github.com/r0zar"
   },
   {
-    "key": "soundcloud",
-    "title": "SoundCloud",
+    "key": "asd",
+    "title": "Event 3",
     "logo": "http://celebnmusic247.com/wp-content/uploads/2015/03/soundcloud-app-logo-150x150.png",
-    "text1": "My musical portfolio.",
-    "text2": "When I'm not coding, I spend my time producing music.  I'm still defining my sound, but let's just say I like to bring the bass.",
+    "text1": "Dec 13",
+    "text2": "asd",
     "link": "https://soundcloud.com/ross-ragsdale"
   },
   {
-    "key": "protohack",
-    "title": "Proto-Hack",
-    "logo": "https://cdn2.iconfinder.com/data/icons/metro-uinvert-dock/256/Google_Blogger.png",
-    "text1": "My technical blog.",
-    "text2": "I've found that documenting my development process helps me retain and reproduce my results.  I hope that it's of use to hackers out there too.",
-    "link": "http://www.proto-hack.com/"
-  },
-  {
-    "key": "facebook",
-    "title": "Facebook",
-    "logo": "https://www.facebook.com/images/fb_icon_325x325.png",
-    "text1": "Good old facebook.",
-    "text2": "Yes, I have friends.  I talk to them.  They talk to me.  For the most part, I think some of the actually like me.",
-    "link": "https://www.facebook.com/ross.ragsdale"
+    "key": "asd",
+    "title": "Event 4",
+    "logo": "http://celebnmusic247.com/wp-content/uploads/2015/03/soundcloud-app-logo-150x150.png",
+    "text1": "Dec 18",
+    "text2": "asd",
+    "link": "https://soundcloud.com/ross-ragsdale"
   }
 ]
