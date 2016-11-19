@@ -1,7 +1,24 @@
 <div ng-controller="MainController" class="main-container">
   <fountain-header></fountain-header>
   <main class="main">
-    <div id="mc" class="carousel slide" data-ride="carousel">
+    <div class="loader loader--style8" title="7" ng-hide="carouselLoaded" style="margin: 0 auto;">
+      <br><br><br><br>
+      <div class="loader loader--style3" title="2">
+        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="240px" height="240px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+        <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+          <animateTransform attributeType="xml"
+            attributeName="transform"
+            type="rotate"
+            from="0 25 25"
+            to="360 25 25"
+            dur="0.6s"
+            repeatCount="indefinite"/>
+          </path>
+        </svg>
+      </div>
+    </div>
+    <div id="mc" class="carousel slide" data-ride="carousel" ng-show="carouselLoaded">
       <!-- Indicators -->
       <ol class="carousel-indicators">
         <li data-target="#mc" data-slide-to="0" class="active"></li>
@@ -12,15 +29,15 @@
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
         <div class="item active">
-          <img ng-src="{{hrefWideImage1}}" alt="Chania" width="100%">
+          <a ng-href="{{wideImage1Link}}"><img ng-src="{{wideImage1}}" alt="img1" width="100%"></a>
         </div>
 
         <div class="item">
-          <img ng-src="{{hrefWideImage2}}" alt="Chania" width="100%">
+          <a ng-href="{{wideImage2Link}}"><img ng-src="{{wideImage2}}" alt="img2" width="100%"></a>
         </div>
 
         <div class="item">
-          <img ng-src="{{hrefWideImage3}}" alt="Flower" width="100%">
+          <a ng-href="{{wideImage3Link}}"><img ng-src="{{wideImage3}}" alt="img3" width="100%"></a>
         </div>
       </div>
 
@@ -34,9 +51,31 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
-      <!-- <fountain-title></fountain-title> -->
-      <fountain-techs></fountain-techs>
+    <!--
+    <v-tabs class="vTabs--default" horizontal active="activeTabIndex">
+      <v-tab>ABOUT US</v-tab>
+      <v-tab>UPCOMING EVENTS</v-tab>
+      <v-tab>WHO WE ARE</v-tab>
+      <v-tab>CONTACT US</v-tab>
+    </v-tabs>
 
+    <v-pages class="vPages--default" active="activeTabIndex">
+      <v-page>
+        <about-us></about-us>
+      </v-page>
+      <v-page>
+        <fountain-techs></fountain-techs>
+      </v-page>
+      <v-page>
+        <who-we-are></who-we-are>
+      </v-page>
+      <v-page>
+        <contact-us></contact-us>
+      </v-page>
+    </v-pages>
+    -->
+
+    <fountain-techs></fountain-techs>
   </main>
   <fountain-footer></fountain-footer>
 </div>

@@ -1,14 +1,15 @@
 <header ng-controller="HeadController" class="header">
+  <span class="col-md-1"></span>
   <span class="glyphicon glyphicon-align-justify" ng-click="openAside('left', true)"></span>
   <p class="header-title" ng-click="goHome()">
-      <img class="header-title-img" ng-src="{{hrefLogo}}"/>
+      <img class="header-title-img" ng-src="shandeez-logo.jpg"/>
   </p>
   <row>
-  <p class="header-date">
-    <a href="https://www.instagram.com/shandeezcollectiv/"><img class="insta-logo" ng-src="{{hrefSocialMedia1}}"/></a>
-    <a href="https://www.facebook.com/shandeezcollectiv"><img class="fb-logo" ng-src="{{hrefSocialMedia2}}"/></a>
-    <a href="http://www.shandeezcollectiv.com/"><img class="tumblr-logo" ng-src="{{hrefSocialMedia3}}"/></a>
-  </p>
-</row>
-  &nbsp;
+    <p class="header-date">
+      <a href="{{socialMedia1}}"><img class="insta-logo" ng-src="insta.png"/></a>
+      <a href="{{socialMedia2}}"><img class="fb-logo" ng-src="facebook.png"/></a>
+      <a href="{{socialMedia3}}"><img class="tumblr-logo" ng-src="tumblr.png"/></a>
+    </p>
+  </row>
+  <span class="col-md-1"></span>
 </header>
