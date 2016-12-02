@@ -1,2 +1,2 @@
-# client-core
-simple website using angularjs with firebase backend
+# mix-tracker
+a mix management and calculation tool
