@@ -1,2 +1,2 @@
-# angularjs-firebase-website
+# client-core
 simple website using angularjs with firebase backend

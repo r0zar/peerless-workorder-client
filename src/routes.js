@@ -15,20 +15,16 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
       url: '/about-us',
       component: 'aboutUs'
     })
-    .state('whoWeAre', {
-      url: '/who-we-are',
-      component: 'whoWeAre'
-    })
-    .state('upcomingEvents', {
-      url: '/upcoming-events',
-      component: 'upcomingEvents'
-    })
     .state('contactUs', {
       url: '/contact-us',
       component: 'contactUs'
     })
-    .state('socialMedia', {
-      url: '/social-media',
-      component: 'socialMedia'
+    .state('nutrient', {
+      url: '/nutrient/:id',
+      component: 'nutrient'
+    })
+    .state('mix', {
+      url: '/mix/:id',
+      component: 'mix'
     });
 }

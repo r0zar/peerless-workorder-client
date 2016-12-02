@@ -27,6 +27,7 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  background-color: white;
 }
 .main {
   flex: 1;
@@ -37,7 +38,7 @@ a {
 .header {
   display: flex;
   align-items: center;
-  background-color: black;
+  background-color: #fff9f0;
 }
 .header-title {
   flex: 6;
@@ -49,17 +50,17 @@ a {
 .glyphicon-align-justify {
   font-size: 50px;
   cursor: pointer;
-  color: white;
+  color: black;
   padding-left: 10px;
   padding-bottom: 4px;
 }
 .glyphicon-align-justify:hover {
-    opacity: 0.8;
+    color: gray;
   }
 
 .modal-content {
-  background-color: #0f0f0f;
-  color: white;
+  background-color: #fff9f0;
+  color: black;
 }
 
 .header-date {
@@ -98,72 +99,14 @@ a {
 .footer {
   padding: 0.5rem;
   font-size: 1rem;
-  background-color: black;
+  background-color: #fff9f0;
   text-align: center;
-  color: white;
+  color: black;
 }
 
-.techs-container {
-  margin: 1rem;
-}
-.techs-h2 {
-  font-weight: 300;
-  font-size: 2.5rem;
-}
-.techs {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.tech {
-  height: 14rem;
-  width: 20rem;
-  border: 1px solid lightgray;
-  margin: 1rem;
-  padding: 1rem;
-  background-color: black;
-  color: white;
-}
-.tech:hover {
-    background-color: #0f0f0f;
-}
-
-.tech-logo {
-  width: 5rem;
-  height: 5rem;
-  float: right;
-  margin: 0 0 .5rem .5rem;
-}
-.tech-h3 {
-  font-size: 1.5rem;
-  margin: 0 0 2rem 0;
-}
 
 .header-title-img {
  height: 80px;
-}
-
-.insta-logo {
-  height: 50px;
-}
-.insta-logo:hover {
-  opacity: 0.8;
-}
-
-.fb-logo {
-  height: 70px;
-}
-.fb-logo:hover {
-  opacity: 0.8;
-}
-
-.tumblr-logo {
-  height: 50px;
-}
-.tumblr-logo:hover {
-  opacity: 0.8;
 }
 
 .menu-choice:hover {
@@ -175,63 +118,14 @@ a {
   cursor: pointer;
 }
 
-svg #Layer_1 {
-  width: 24px;
-  height: 30px;
-}
-
 @media only screen and (max-width : 820px) {
   .header-title-img {
    height: 40px;
-  }
-  .insta-logo {
-    height: 24px;
-  }
-
-  .fb-logo {
-    height: 35px;
-  }
-
-  .tumblr-logo {
-    height: 24px;
-  }
-  .glyphicon-align-justify {
-    font-size: 34px;
-    cursor: pointer;
-    color: white;
-    padding-left: 10px;
-    padding-bottom: 4px;
-  }
-  .carousel-inner {
-    width: 100%;
-    overflow: hidden;
   }
  }
 
 @media only screen and (max-width : 420px) {
   .header-title-img {
-   height: 20px;
-  }
-  .insta-logo {
-    height: 12px;
-  }
-
-  .fb-logo {
-    height: 17px;
-  }
-
-  .tumblr-logo {
-    height: 12px;
-  }
-  .glyphicon-align-justify {
-    font-size: 18px;
-    cursor: pointer;
-    color: white;
-    padding-left: 10px;
-    padding-bottom: 4px;
-  }
-  .carousel-inner {
-    width: 100%;
-    overflow: hidden;
+   height: 30px;
   }
  }

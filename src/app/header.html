@@ -1,15 +1,10 @@
-<header ng-controller="HeadController" class="header">
-  <span class="col-md-1"></span>
-  <span class="glyphicon glyphicon-align-justify" ng-click="openAside('left', true)"></span>
+<header ng-controller="HeadController" class="header navbar navbar-dark bg-inverse">
   <p class="header-title" ng-click="goHome()">
-      <img class="header-title-img" ng-src="shandeez-logo.jpg"/>
+      Mix Tracker
   </p>
   <row>
     <p class="header-date">
-      <a href="{{socialMedia1}}"><img class="insta-logo" ng-src="insta.png"/></a>
-      <a href="{{socialMedia2}}"><img class="fb-logo" ng-src="facebook.png"/></a>
-      <a href="{{socialMedia3}}"><img class="tumblr-logo" ng-src="tumblr.png"/></a>
+    <button ng-show="session.active" type="button" class="btn btn-default" style="width: 100%;" ng-click="logout()">Log out</button>
     </p>
   </row>
-  <span class="col-md-1"></span>
 </header>

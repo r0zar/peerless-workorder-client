@@ -1,81 +1,137 @@
 <div ng-controller="MainController" class="main-container">
   <fountain-header></fountain-header>
   <main class="main">
-    <div class="loader loader--style8" title="7" ng-hide="carouselLoaded" style="margin: 0 auto;">
-      <br><br><br><br>
-      <div class="loader loader--style3" title="2">
-        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-           width="240px" height="240px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-        <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-          <animateTransform attributeType="xml"
-            attributeName="transform"
-            type="rotate"
-            from="0 25 25"
-            to="360 25 25"
-            dur="0.6s"
-            repeatCount="indefinite"/>
-          </path>
-        </svg>
-      </div>
-    </div>
-    <div id="mc" class="carousel slide" data-ride="carousel" ng-show="carouselLoaded">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li data-target="#mc" data-slide-to="0" class="active"></li>
-        <li data-target="#mc" data-slide-to="1"></li>
-        <li data-target="#mc" data-slide-to="2"></li>
-      </ol>
 
-      <!-- Wrapper for slides -->
-      <div class="carousel-inner" role="listbox">
-        <div class="item active">
-          <a ng-href="{{wideImage1Link}}"><img ng-src="{{wideImage1}}" alt="img1" width="100%"></a>
-        </div>
+    <br>
 
-        <div class="item">
-          <a ng-href="{{wideImage2Link}}"><img ng-src="{{wideImage2}}" alt="img2" width="100%"></a>
-        </div>
+    <div class="card-columns">
 
-        <div class="item">
-          <a ng-href="{{wideImage3Link}}"><img ng-src="{{wideImage3}}" alt="img3" width="100%"></a>
+      <div class="card card-info">
+        <div class="card-block">
+          <h4 class="card-title">Create/update a nutrient:</h4>
+          <form>
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="nutrient.id" />
+            </div>
+            <div class="form-group">
+              <label>Name: </label>
+              <input type="text" class="form-control" ng-model="nutrient.name" />
+            </div>
+            <div class="form-group">
+              <label>Amount: </label>
+              <input type="number" class="form-control" ng-model="nutrient.amount" />
+            </div>
+            <div class="form-group">
+              <input type="radio" name="unit" ng-model="nutrient.unit" value="pounds" checked> lb
+              <input type="radio" name="unit" ng-model="nutrient.unit" value="kilograms"> kg
+            </div>
+              <input type="submit" class="btn btn-primary" ng-click="writeNutrientData(nutrient.id, nutrient.name, nutrient.amount, nutrient.unit)" value="Save" />
+          </form>
         </div>
       </div>
 
-      <!-- Left and right controls -->
-      <a class="left carousel-control" href="#mc" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="right carousel-control" href="#mc" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
+      <div class="card card-inverse card-primary">
+        <div class="card-block">
+          <h4 class="card-title">Create/update a mix:</h4>
+          <form>
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="mix.id" />
+            </div>
+            <div class="form-group">
+              <label class="card-title">Name: </label>
+              <input type="text" class="form-control" ng-model="mix.name" />
+            </div>
+              <input type="submit" class="btn btn-primary" ng-click="writeMixData(mix.id, mix.name)" value="Save" />
+          </form>
+        </div>
+      </div>
+
+      <div ng-show="mixes" class="card card-inverse card-primary">
+        <div class="card-block">
+          <h4 class="card-title">Create/update an ingredient:</h4>
+          <form>
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="ingredient.id" />
+            </div>
+            <div class="form-group">
+              <label class="card-title">Mix: </label>
+              <select class="form-control" ng-model="ingredient.mix">
+                <option ng-repeat="(key, value) in mixes" value="{{key}}">{{value.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="card-title">Nutrient: </label>
+              <select class="form-control" ng-model="ingredient.nutrient">
+                <option ng-repeat="(key, value) in nutrients" value="{{key}}">{{value.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="card-title">Amount: </label>
+              <input type="number" class="form-control" ng-model="ingredient.amount" />
+            </div>
+            <div class="form-group">
+              <input type="radio" name="unit" ng-model="ingredient.unit" value="pounds" checked> lb
+              <input type="radio" name="unit" ng-model="ingredient.unit" value="kilograms"> kg
+            </div>
+            <input type="submit" class="btn btn-primary" ng-click="writeIngredientData(ingredient.id, ingredient.mix, ingredient.nutrient, ingredient.amount, ingredient.unit)" value="Save" />
+          </form>
+        </div>
+      </div>
+
+      <div ng-show="mixes" class="card card-warning">
+        <div class="card-block">
+          <h4 class="card-title">Calculate a mix:</h4>
+          <form>
+            <div class="form-group">
+              <label>Mix: </label>
+              <select class="form-control" ng-model="recipe.mix">
+                <option ng-repeat="(key, value) in mixes" value="{{key}}">{{value.name}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount: </label>
+              <input class="form-control" type="number" ng-model="recipe.amount" />
+            </div>
+            <div class="form-group">
+              <input type="radio" name="unit" ng-model="recipe.unit" value="pounds" checked> lb
+              <input type="radio" name="unit" ng-model="recipe.unit" value="kilograms"> kg
+            </div>
+<pre>
+recipe = {{recipe | json}}
+</pre>
+            <input type="submit" class="btn btn-primary" ng-click="calculateRecipeData(recipe.id, recipe.mix, recipe.amount, recipe.unit)" value="Calulate" />
+          </form>
+        </div>
+      </div>
+
+
+
+      <div class="card card-block card-info text-xs-center" ng-repeat="(key, nutrient) in nutrients">
+        <div ng-click="goToNutrient(key)">
+          <h4 class="card-title">{{nutrient.name}}</h4>
+          <p class="card-text">{{nutrient.amount}} {{nutrient.unit}}.</p>
+        </div>
+      </div>
+
+      <div class="card card-block card-inverse card-primary text-xs-center" ng-repeat="(key, mix) in mixes">
+        <div ng-click="goToMix(key)">
+          <h4 class="card-title">{{mix.name}}</h4>
+          <p class="card-text" ng-repeat="ingredient in mix.ingredients">{{ingredient.amount}} {{ingredient.unit}} of {{ingredient.name}}.</p>
+        </div>
+      </div>
+
     </div>
-    <!--
-    <v-tabs class="vTabs--default" horizontal active="activeTabIndex">
-      <v-tab>ABOUT US</v-tab>
-      <v-tab>UPCOMING EVENTS</v-tab>
-      <v-tab>WHO WE ARE</v-tab>
-      <v-tab>CONTACT US</v-tab>
-    </v-tabs>
 
-    <v-pages class="vPages--default" active="activeTabIndex">
-      <v-page>
-        <about-us></about-us>
-      </v-page>
-      <v-page>
-        <fountain-techs></fountain-techs>
-      </v-page>
-      <v-page>
-        <who-we-are></who-we-are>
-      </v-page>
-      <v-page>
-        <contact-us></contact-us>
-      </v-page>
-    </v-pages>
-    -->
-
-    <fountain-techs></fountain-techs>
   </main>
+
   <fountain-footer></fountain-footer>
+<!-- DEBUG INFO
+<pre>
+nutrients = {{nutrients | json}}
+
+ingredients = {{ingredients | json}}
+
+mixes = {{mixes | json}}
+</pre>
+-->
 </div>
