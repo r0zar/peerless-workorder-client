@@ -1,127 +1,149 @@
 <div ng-controller="MainController" class="main-container">
   <fountain-header></fountain-header>
   <main class="main">
+    <md-content class="md-padding" layout-xs="column" layout="row">
+      <div flex-xs flex-gt-xs="50" layout="column">
 
-    <br>
+        <md-card md-theme="default" md-theme-watch>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Add a Nutrient</span>
+              <span class="md-subhead">
+                <form>
+                  <div class="form-group">
+                    <input type="text" class="form-control" ng-model="nutrient.id" />
+                  </div>
+                  <div class="form-group">
+                    <label>Name: </label>
+                    <input type="text" class="form-control" ng-model="nutrient.name" />
+                  </div>
+                  <div class="form-group">
+                    <label>Amount: </label>
+                    <input type="number" class="form-control" ng-model="nutrient.amount" />
+                  </div>
+                  <div class="form-group">
+                    <input type="radio" name="unit" ng-model="nutrient.unit" value="pounds" checked> lb
+                    <input type="radio" name="unit" ng-model="nutrient.unit" value="kilograms"> kg
+                  </div>
+                    <input type="submit" class="btn btn-primary" ng-click="writeNutrientData(nutrient.id, nutrient.name, nutrient.amount, nutrient.unit)" value="Save" />
+                </form>
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+        </md-card>
 
-    <div class="card-columns">
+        <md-card md-theme="default" md-theme-watch>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Add a Mix</span>
+              <span class="md-subhead">
+              <form>
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="mix.id" />
+                </div>
+                <div class="form-group">
+                  <label class="card-title">Name: </label>
+                  <input type="text" class="form-control" ng-model="mix.name" />
+                </div>
+                  <input type="submit" class="btn btn-primary" ng-click="writeMixData(mix.id, mix.name)" value="Save" />
+              </form>
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+        </md-card>
 
-      <div class="card card-info">
-        <div class="card-block">
-          <h4 class="card-title">Create/update a nutrient:</h4>
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" ng-model="nutrient.id" />
-            </div>
-            <div class="form-group">
-              <label>Name: </label>
-              <input type="text" class="form-control" ng-model="nutrient.name" />
-            </div>
-            <div class="form-group">
-              <label>Amount: </label>
-              <input type="number" class="form-control" ng-model="nutrient.amount" />
-            </div>
-            <div class="form-group">
-              <input type="radio" name="unit" ng-model="nutrient.unit" value="pounds" checked> lb
-              <input type="radio" name="unit" ng-model="nutrient.unit" value="kilograms"> kg
-            </div>
-              <input type="submit" class="btn btn-primary" ng-click="writeNutrientData(nutrient.id, nutrient.name, nutrient.amount, nutrient.unit)" value="Save" />
-          </form>
-        </div>
+
+        <md-card md-theme="default" md-theme-watch>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Add an Ingredient</span>
+              <span class="md-subhead">
+              <form>
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="ingredient.id" />
+                </div>
+                <div class="form-group">
+                  <label class="card-title">Mix: </label>
+                  <select class="form-control" ng-model="ingredient.mix">
+                    <option ng-repeat="(key, value) in mixes" value="{{key}}">{{value.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="card-title">Nutrient: </label>
+                  <select class="form-control" ng-model="ingredient.nutrient">
+                    <option ng-repeat="(key, value) in nutrients" value="{{key}}">{{value.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="card-title">Amount: </label>
+                  <input type="number" class="form-control" ng-model="ingredient.amount" />
+                </div>
+                <div class="form-group">
+                  <input type="radio" name="unit" ng-model="ingredient.unit" value="pounds" checked> lb
+                  <input type="radio" name="unit" ng-model="ingredient.unit" value="kilograms"> kg
+                </div>
+                <input type="submit" class="btn btn-primary" ng-click="writeIngredientData(ingredient.id, ingredient.mix, ingredient.nutrient, ingredient.amount, ingredient.unit)" value="Save" />
+              </form>
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+        </md-card>
+
+        <md-card md-theme="default" md-theme-watch>
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Calculate a Mix</span>
+              <span class="md-subhead">
+              <form>
+                <div class="form-group">
+                  <label>Mix: </label>
+                  <select class="form-control" ng-model="recipe.mix">
+                    <option ng-repeat="(key, value) in mixes" value="{{key}}">{{value.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Amount: </label>
+                  <input class="form-control" type="number" ng-model="recipe.amount" />
+                </div>
+                <div class="form-group">
+                  <input type="radio" name="unit" ng-model="recipe.unit" value="pounds" checked> lb
+                  <input type="radio" name="unit" ng-model="recipe.unit" value="kilograms"> kg
+                </div>
+    <pre>
+    recipe = {{recipe | json}}
+    </pre>
+                <input type="submit" class="btn btn-primary" ng-click="calculateRecipeData(recipe.id, recipe.mix, recipe.amount, recipe.unit)" value="Calculate" />
+              </form>
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+        </md-card>
+
+        <md-card ng-repeat="(key, nutrient) in nutrients" md-theme="default" md-theme-watch>
+          <md-card-title ng-click="goToNutrient(key)">
+            <md-card-title-text>
+              <span class="md-headline">{{nutrient.name}}</span>
+              <span class="md-subhead">
+                {{nutrient.amount}} {{nutrient.unit}}.
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+        </md-card>
+
+        <md-card ng-repeat="(key, mix) in mixes" md-theme="default" md-theme-watch>
+          <md-card-title ng-click="goToMix(key)">
+            <md-card-title-text>
+              <span class="md-headline">{{mix.name}}</span>
+              <span class="md-subhead" ng-repeat="ingredient in mix.ingredients">
+                {{ingredient.amount}} {{ingredient.unit}} of {{ingredient.name}}.
+              </span>
+            </md-card-title-text>
+          </md-card-title>
+        </md-card>
+
+
       </div>
-
-      <div class="card card-inverse card-primary">
-        <div class="card-block">
-          <h4 class="card-title">Create/update a mix:</h4>
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" ng-model="mix.id" />
-            </div>
-            <div class="form-group">
-              <label class="card-title">Name: </label>
-              <input type="text" class="form-control" ng-model="mix.name" />
-            </div>
-              <input type="submit" class="btn btn-primary" ng-click="writeMixData(mix.id, mix.name)" value="Save" />
-          </form>
-        </div>
-      </div>
-
-      <div ng-show="mixes" class="card card-inverse card-primary">
-        <div class="card-block">
-          <h4 class="card-title">Create/update an ingredient:</h4>
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" ng-model="ingredient.id" />
-            </div>
-            <div class="form-group">
-              <label class="card-title">Mix: </label>
-              <select class="form-control" ng-model="ingredient.mix">
-                <option ng-repeat="(key, value) in mixes" value="{{key}}">{{value.name}}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="card-title">Nutrient: </label>
-              <select class="form-control" ng-model="ingredient.nutrient">
-                <option ng-repeat="(key, value) in nutrients" value="{{key}}">{{value.name}}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="card-title">Amount: </label>
-              <input type="number" class="form-control" ng-model="ingredient.amount" />
-            </div>
-            <div class="form-group">
-              <input type="radio" name="unit" ng-model="ingredient.unit" value="pounds" checked> lb
-              <input type="radio" name="unit" ng-model="ingredient.unit" value="kilograms"> kg
-            </div>
-            <input type="submit" class="btn btn-primary" ng-click="writeIngredientData(ingredient.id, ingredient.mix, ingredient.nutrient, ingredient.amount, ingredient.unit)" value="Save" />
-          </form>
-        </div>
-      </div>
-
-      <div ng-show="mixes" class="card card-warning">
-        <div class="card-block">
-          <h4 class="card-title">Calculate a mix:</h4>
-          <form>
-            <div class="form-group">
-              <label>Mix: </label>
-              <select class="form-control" ng-model="recipe.mix">
-                <option ng-repeat="(key, value) in mixes" value="{{key}}">{{value.name}}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Amount: </label>
-              <input class="form-control" type="number" ng-model="recipe.amount" />
-            </div>
-            <div class="form-group">
-              <input type="radio" name="unit" ng-model="recipe.unit" value="pounds" checked> lb
-              <input type="radio" name="unit" ng-model="recipe.unit" value="kilograms"> kg
-            </div>
-<pre>
-recipe = {{recipe | json}}
-</pre>
-            <input type="submit" class="btn btn-primary" ng-click="calculateRecipeData(recipe.id, recipe.mix, recipe.amount, recipe.unit)" value="Calulate" />
-          </form>
-        </div>
-      </div>
-
-
-
-      <div class="card card-block card-info text-xs-center" ng-repeat="(key, nutrient) in nutrients">
-        <div ng-click="goToNutrient(key)">
-          <h4 class="card-title">{{nutrient.name}}</h4>
-          <p class="card-text">{{nutrient.amount}} {{nutrient.unit}}.</p>
-        </div>
-      </div>
-
-      <div class="card card-block card-inverse card-primary text-xs-center" ng-repeat="(key, mix) in mixes">
-        <div ng-click="goToMix(key)">
-          <h4 class="card-title">{{mix.name}}</h4>
-          <p class="card-text" ng-repeat="ingredient in mix.ingredients">{{ingredient.amount}} {{ingredient.unit}} of {{ingredient.name}}.</p>
-        </div>
-      </div>
-
-    </div>
-
+    </md-content>
   </main>
 
   <fountain-footer></fountain-footer>

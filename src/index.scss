@@ -27,8 +27,13 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  background-color: #fafafa;
+}
+
+md-card {
   background-color: white;
 }
+
 .main {
   flex: 1;
   display: flex;
