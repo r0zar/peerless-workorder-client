@@ -10,6 +10,7 @@ import {main} from './app/main';
 import {aboutUs} from './app/aboutUs';
 import {contactUs} from './app/contactUs';
 import {nutrient} from './app/nutrient';
+import {recipe} from './app/recipe';
 import {mix} from './app/mix';
 import {header} from './app/header';
 import {title} from './app/title';
@@ -40,55 +41,169 @@ angular
   }]);
 
 angular
-  .module('app', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'angular-uuid', 'Sessions'])
+  .module('Firebase', ['Sessions'])
+  .service('FirebaseService', ['SessionService', (SessionService) => {
+    return {
+      get: (value) => {
+        return firebase.database().ref(`/${value}`).once('value').then((snapshot) => {
+          var response = snapshot.val();
+          for (var item in response) {
+            if (response[item].owner != SessionService.email) {
+              delete response[item];
+            }
+          }
+          return response;
+        });
+      },
+      users: firebase.database().ref('users'),
+      nutrients: firebase.database().ref('nutrients'),
+      recipes: firebase.database().ref('recipes'),
+      ingredients: firebase.database().ref('ingredients'),
+      mixes: firebase.database().ref('mixes')
+    }
+  }]);
+
+angular
+  .module('app', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'angular-uuid', 'Sessions', 'Firebase'])
   .config(routesConfig)
   .component('app', main)
   .component('aboutUs', aboutUs)
   .component('contactUs', contactUs)
   .component('nutrient', nutrient)
+  .component('recipe', recipe)
   .component('mix', mix)
   .component('fountainHeader', header)
   .component('fountainTitle', title)
   .component('fountainFooter', footer)
-  .controller('MixController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', ($scope, $state, $stateParams, uuid, SessionService) => {
+  .controller('MixController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
 
-    var database = firebase.database();
-    function get(value){
-      return database.ref(`/${value}`).once('value').then(function(snapshot) {
-        $scope[value] = snapshot.val();
-      });
+    if (!SessionService.session) {
+      $state.go('aboutUs');
     }
-    $scope.mixes = {};
-    get('mixes').then(()=>{
-      $scope.mix = $scope.mixes[$stateParams.id];
-      $scope.$apply();
-    });
+
+    FirebaseService.get('mixes')
+      .then((response)=>{
+        $scope.mixes = response;
+        $scope.mix = $scope.mixes[$stateParams.id];
+        $scope.$apply();
+      });
 
   }])
-  .controller('NutrientController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', ($scope, $state, $stateParams, uuid, SessionService) => {
+  .controller('RecipeController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
 
-    var database = firebase.database();
-    function get(value){
-      return database.ref(`/${value}`).once('value').then(function(snapshot) {
-        $scope[value] = snapshot.val();
-      });
+    if (!SessionService.session) {
+      $state.go('aboutUs');
     }
-    $scope.nutrients = {};
-    get('nutrients').then(()=>{
-      $scope.nutrient = $scope.nutrients[$stateParams.id];
-      $scope.$apply();
-    });
+
+    $scope.genUuid = (type) => {
+      var hash = uuid.v4();
+      $scope[type].id = hash;
+    }
+
+    FirebaseService.get('nutrients')
+      .then((response) => {
+        $scope.nutrients = response;
+      })
+
+    FirebaseService.get('recipes')
+      .then((response) => {
+        $scope.recipes = response;
+        $scope.recipe = $scope.recipes[$stateParams.id];
+        $scope.recipe.ingredients = {};
+        // had to set the listener during the call, couldnt figure out a better way
+        FirebaseService.ingredients
+          .on('value', function(snapshot) {
+            $scope.ingredients = snapshot.val();
+            for (var ingredient in $scope.ingredients) {
+              // if ingredient is in the recipe
+              if ($stateParams.id == $scope.ingredients[ingredient].recipe) {
+                // add the body to the recipe
+                $scope.recipe.ingredients[ingredient] = {
+                  'name': $scope.nutrients[$scope.ingredients[ingredient].nutrient].name,
+                  'amount': $scope.ingredients[ingredient].amount,
+                  'unit': $scope.ingredients[ingredient].unit
+                };
+              }
+            }
+          });
+        $scope.$apply();
+      });
+
+    $scope.ingredient = {};
+    $scope.genUuid('ingredient');
+    FirebaseService.get('ingredients')
+      .then((response) => {
+        $scope.ingredients = response;
+        for (var ingredient in $scope.ingredients) {
+          // if ingredient is in the recipe
+          if ($stateParams.id == $scope.ingredients[ingredient].recipe) {
+            // add the body to the recipe
+            $scope.recipe.ingredients[ingredient] = {
+              'name': $scope.nutrients[$scope.ingredients[ingredient].nutrient].name,
+              'amount': $scope.ingredients[ingredient].amount,
+              'unit': $scope.ingredients[ingredient].unit
+            };
+          }
+        }
+        $scope.$apply();
+      })
+
+      $scope.writeIngredientData = (id, nutrient, amount, unit) => {
+        firebase.database().ref('ingredients/' + id).set({
+          recipe: $stateParams.id,
+          nutrient: nutrient,
+          amount: amount,
+          unit: unit,
+          owner: SessionService.email
+        });
+        $scope.genUuid('ingredient');
+      }
+
+      $scope.calculateRecipeData = function(amount, unit) {
+        var baseAmount = 0;
+        var scaleFactor;
+        // loop through mixes
+        for (var ingredient in $scope.recipe.ingredients) {
+           if (unit == 'grams') {
+             if ($scope.recipe.ingredients[ingredient].unit == 'grams') {
+               baseAmount = baseAmount + $scope.recipe.ingredients[ingredient].amount;
+             } else {
+               baseAmount = baseAmount + ($scope.recipe.ingredients[ingredient].amount * 0 );
+             }
+           } else {
+             if ($scope.recipe.ingredients[ingredient].unit == 'grams') {
+               baseAmount = baseAmount + ($scope.recipe.ingredients[ingredient].amount * 0 );
+             } else {
+               baseAmount = baseAmount + $scope.recipe.ingredients[ingredient].amount;
+             }
+           }
+        }
+
+        $scope.recipe.baseAmount = baseAmount;
+        scaleFactor = amount / baseAmount;
+        for (var ingredient in $scope.recipe.ingredients) {
+          $scope.recipe.ingredients[ingredient] = $scope.recipe.ingredients[ingredient];
+          $scope.recipe.ingredients[ingredient].amount = scaleFactor * $scope.recipe.ingredients[ingredient].amount;
+        };
+      }
 
   }])
-  .controller('MainController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', ($scope, $state, $stateParams, uuid, SessionService) => {
-  console.log($scope);
-    var database = firebase.database();
-    function get(value){
-      return database.ref(`/${value}`).once('value').then(function(snapshot) {
-        $scope[value] = snapshot.val();
-      });
+  .controller('NutrientController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
+
+    if (!SessionService.session) {
+      $state.go('aboutUs');
     }
 
+    FirebaseService.get('nutrients')
+      .then((response)=>{
+        $scope.nutrients = response;
+        $scope.nutrient = $scope.nutrients[$stateParams.id];
+        $scope.$apply();
+      });
+
+  }])
+  .controller('MainController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
+    var database = firebase.database();
 
     $scope.session = {
       'active': SessionService.session
@@ -101,84 +216,12 @@ angular
       SessionService.login(email, password);
     }
 
-    $scope.users = {}
-    $scope.mixes = {}
-    $scope.nutrients = {}
-    $scope.ingredients = {}
-
-    var usersRef = database.ref('users');
-    var mixesRef = database.ref('mixes');
-    var nutrientsRef = database.ref('nutrients');
-    var ingredientsRef = database.ref('ingredients');
-
-    usersRef.on('value', function(snapshot) {
-      $scope.users = snapshot.val();
-    });
-
-    nutrientsRef.on('value', function(snapshot) {
-      $scope.nutrients = snapshot.val();
-      for (var nutrient in $scope.nutrients) {
-        if ($scope.nutrients[nutrient].owner != SessionService.email) {
-          delete $scope.nutrients[nutrient];
-        }
-      }
-    });
-
-    ingredientsRef.on('value', function(snapshot) {
-      $scope.ingredients = snapshot.val();
-      for (var ingredient in $scope.ingredients) {
-        if ($scope.ingredients[ingredient].owner != SessionService.email) {
-          delete $scope.ingredients[ingredient];
-        }
-      }
-      for (var mix in $scope.mixes) {
-        $scope.mixes[mix].ingredients = {};
-        // skip loop if the property is from prototype
-        for (var ingredient in $scope.ingredients) {
-          // if ingredient is mapped to the mix
-          if (mix == $scope.ingredients[ingredient].mix) {
-            // add it as an ingredient in the mix
-            $scope.mixes[mix].ingredients[ingredient] = {
-              'name': $scope.nutrients[$scope.ingredients[ingredient].nutrient].name,
-              'amount': $scope.ingredients[ingredient].amount,
-              'unit': $scope.ingredients[ingredient].unit
-            };
-          }
-        }
-      }
-    });
-
-    mixesRef.on('value', function(snapshot) {
-      $scope.mixes = snapshot.val();
-      for (var mix in $scope.mixes) {
-        if ($scope.mixes[mix].owner != SessionService.email) {
-          delete $scope.mixes[mix];
-        }
-      }
-      for (var mix in $scope.mixes) {
-        $scope.mixes[mix].ingredients = {};
-        // skip loop if the property is from prototype
-        for (var ingredient in $scope.ingredients) {
-          // if ingredient is mapped to the mix
-          if (mix == $scope.ingredients[ingredient].mix) {
-            // add it as an ingredient in the mix
-            $scope.mixes[mix].ingredients[ingredient] = {
-              'name': $scope.nutrients[$scope.ingredients[ingredient].nutrient].name,
-              'amount': $scope.ingredients[ingredient].amount,
-              'unit': $scope.ingredients[ingredient].unit
-            };
-          }
-        }
-      }
-    });
-
-
-
     $scope.user = {};
     $scope.nutrient = {};
     $scope.ingredient = {};
     $scope.recipe = {};
     $scope.mix = {};
+
 
     $scope.genUuid = (type) => {
       var hash = uuid.v4();
@@ -187,7 +230,71 @@ angular
 
     $scope.genUuid('nutrient');
     $scope.genUuid('ingredient');
+    $scope.genUuid('recipe');
     $scope.genUuid('mix');
+
+    FirebaseService.users
+      .on('value', function(snapshot) {
+        $scope.users = snapshot.val();
+      });
+
+    FirebaseService.nutrients
+      .on('value', function(snapshot) {
+        $scope.nutrients = snapshot.val();
+        for (var nutrient in $scope.nutrients) {
+          if ($scope.nutrients[nutrient].owner != SessionService.email) {
+            delete $scope.nutrients[nutrient];
+          }
+        }
+      });
+
+    FirebaseService.ingredients
+      .on('value', function(snapshot) {
+        $scope.ingredients = snapshot.val();
+        for (var ingredient in $scope.ingredients) {
+          if ($scope.ingredients[ingredient].owner != SessionService.email) {
+            delete $scope.ingredients[ingredient];
+          }
+        }
+        for (var recipe in $scope.recipes) {
+          $scope.recipes[recipe].ingredients = {};
+          for (var ingredient in $scope.ingredients) {
+            // if ingredient in the recipe
+            if (recipe == $scope.ingredients[ingredient].recipe) {
+              // add the body to the recipe
+              $scope.recipes[recipe].ingredients[ingredient] = {
+                'name': $scope.nutrients[$scope.ingredients[ingredient].nutrient].name,
+                'amount': $scope.ingredients[ingredient].amount,
+                'unit': $scope.ingredients[ingredient].unit
+              };
+            }
+          }
+        }
+      });
+
+    FirebaseService.recipes
+      .on('value', function(snapshot) {
+        $scope.recipes = snapshot.val();
+        for (var recipe in $scope.recipes) {
+          if ($scope.recipes[recipe].owner != SessionService.email) {
+            delete $scope.recipes[recipe];
+          }
+        }
+        for (var recipe in $scope.recipes) {
+          $scope.recipes[recipe].ingredients = {};
+          for (var ingredient in $scope.ingredients) {
+            // if ingredient is in the recipe
+            if (recipe == $scope.ingredients[ingredient].recipe) {
+              // add the body to the recipe
+              $scope.recipes[recipe].ingredients[ingredient] = {
+                'name': $scope.nutrients[$scope.ingredients[ingredient].nutrient].name,
+                'amount': $scope.ingredients[ingredient].amount,
+                'unit': $scope.ingredients[ingredient].unit
+              };
+            }
+          }
+        }
+      });
 
     $scope.writeUserData = function(id, name, email) {
       database.ref('users/' + id).set({
@@ -197,96 +304,37 @@ angular
     }
 
     $scope.writeNutrientData = function(id, name, amount, unit) {
-     database.ref('nutrients/' + id).set({
+      database.ref('nutrients/' + id).set({
        name: name,
        amount: amount,
        unit: unit,
        owner: SessionService.email
-     });
-     $scope.genUuid('nutrient');
-   }
+      });
+      $scope.genUuid('nutrient');
+    }
 
-   $scope.updateNutrientData = function(name, amount, unit) {
-    database.ref('nutrients/' + $stateParams.id).set({
-      name: name,
-      amount: amount,
-      unit: unit,
-      owner: SessionService.email
-    });
-  }
+    $scope.writeRecipeData = function(id, name) {
+      database.ref('recipes/' + id).set({
+        name: name,
+        owner: SessionService.email
+      });
+      $scope.genUuid('recipe');
+    }
 
-   $scope.writeIngredientData = function(id, mix, nutrient, amount, unit) {
-    database.ref('ingredients/' + id).set({
-      mix: mix,
-      nutrient: nutrient,
-      amount: amount,
-      unit: unit,
-      owner: SessionService.email
-    });
-    $scope.genUuid('ingredient');
-  }
+    $scope.goToNutrient = function(nutrient) {
+      $state.go('nutrient', {id: nutrient});
+    }
 
-   $scope.writeMixData = function(id, name) {
-    database.ref('mixes/' + id).set({
-      name: name,
-      owner: SessionService.email
-    });
-    $scope.genUuid('mix');
-  }
+    $scope.goToRecipe = function(recipe) {
+      $state.go('recipe', {id: recipe});
+    }
 
-
-  $scope.goToNutrient = function(nutrient) {
-    $scope.nutrient = $scope.nutrients[$stateParams.id]
-    $state.go('nutrient', {id: nutrient});
-  }
-
-
-  $scope.goToMix = function(mix) {
-    $scope.mix = $scope.mixes[$stateParams.id]
-    $state.go('mix', {id: mix});
-  }
-
-   $scope.calculateRecipeData = function(id, mix, amount, unit) {
-     var baseAmount = 0;
-     var scaleFactor;
-     var mix = $scope.mixes[mix]
-     // loop through mixes
-     for (var ingredient in mix.ingredients) {
-        if (unit == 'pounds') {
-          if (mix.ingredients[ingredient].unit == 'pounds') {
-            baseAmount = baseAmount + mix.ingredients[ingredient].amount;
-          } else {
-            baseAmount = baseAmount + (mix.ingredients[ingredient].amount * 2.20462 );
-          }
-        } else {
-          if (mix.ingredients[ingredient].unit == 'pounds') {
-            baseAmount = baseAmount + (mix.ingredients[ingredient].amount * 0.453592 );
-          } else {
-            baseAmount = baseAmount + mix.ingredients[ingredient].amount;
-          }
-        }
-     }
-
-     mix.baseAmount = baseAmount;
-     scaleFactor = amount / baseAmount;
-     $scope.recipe.ingredients = {};
-     for (var ingredient in mix.ingredients) {
-       $scope.recipe.ingredients[ingredient] = mix.ingredients[ingredient];
-       $scope.recipe.ingredients[ingredient].amount = scaleFactor * $scope.recipe.ingredients[ingredient].amount;
-     };
-   }
+    $scope.goToMix = function(mix) {
+      $state.go('mix', {id: mix});
+    }
 
   }])
   .controller('HeadController', ['$scope', '$state', 'SessionService', ($scope, $state, SessionService) => {
-
-    var database = firebase.database();
-    function get(value){
-      return firebase.database().ref(`/${value}`).once('value').then(function(snapshot) {
-        $scope[value] = snapshot.val();
-      });
-    }
-
-    //$state.go("nutrient", {id: 1});
 
     $scope.session = {
       'active': SessionService.session
@@ -307,35 +355,4 @@ angular
       $state.go('app')
     }
 
-    $scope.asideState = {
-      open: false
-    };
-
-    $scope.openAside = (position, backdrop) => {
-      $scope.asideState = {
-        open: true,
-        position: position
-      };
-
-      function postClose() {
-        $scope.asideState.open = false;
-      }
-
-      $aside.open({
-        templateUrl: 'aside.html',
-        placement: position,
-        size: 'sm',
-        backdrop: backdrop,
-        controller: ['$scope', '$uibModalInstance', ($scope, $uibModalInstance) => {
-          $scope.ok = (e) => {
-            $uibModalInstance.close();
-            e.stopPropagation();
-          };
-          $scope.cancel = (e) => {
-            $uibModalInstance.dismiss();
-            e.stopPropagation();
-          };
-        }]
-      }).result.then(postClose, postClose);
-    };
   }]);

@@ -23,6 +23,10 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
       url: '/nutrient/:id',
       component: 'nutrient'
     })
+    .state('recipe', {
+      url: '/recipe/:id',
+      component: 'recipe'
+    })
     .state('mix', {
       url: '/mix/:id',
       component: 'mix'
