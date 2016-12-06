@@ -12,6 +12,7 @@ import {contactUs} from './app/contactUs';
 import {nutrient} from './app/nutrient';
 import {recipe} from './app/recipe';
 import {mix} from './app/mix';
+import {nutrientHistory} from './app/nutrientHistory';
 import {header} from './app/header';
 import {title} from './app/title';
 import {footer} from './app/footer';
@@ -20,6 +21,7 @@ import './index.scss';
 import 'angular-uuid';
 import 'angular-animate';
 import 'angular-ui-bootstrap';
+import 'moment';
 
 angular
   .module('Sessions', [])
@@ -72,6 +74,7 @@ angular
   .component('nutrient', nutrient)
   .component('recipe', recipe)
   .component('mix', mix)
+  .component('nutrientHistory', nutrientHistory)
   .component('fountainHeader', header)
   .component('fountainTitle', title)
   .component('fountainFooter', footer)
@@ -171,12 +174,20 @@ angular
       }
 
       $scope.writeMixData = function(id, name, amount, unit, recipe) {
+        var history = [{
+          action: "CREATE",
+          amount: amount,
+          unit: unit,
+          owner: SessionService.email,
+          date: moment().format()
+        }];
         firebase.database().ref('mixes/' + id).set({
           name: name,
           amount: amount,
           unit: unit,
           recipe: recipe,
-          owner: SessionService.email
+          owner: SessionService.email,
+          history: history
         });
         $scope.genUuid('mix');
       }
@@ -239,8 +250,26 @@ angular
         $scope.recipe.baseAmount = baseAmount;
         scaleFactor = amount / baseAmount;
         for (var ingredient in $scope.recipe.ingredients) {
+          // add the event to their history
+          var nutrient = $scope.nutrients[$scope.ingredients[ingredient].nutrient];
+          var event = {
+            action: "MIX",
+            amount: $scope.recipe.ingredients[ingredient].amount,
+            unit: nutrient.unit,
+            mix: $scope.mix,
+            owner: SessionService.email,
+            date: moment().format()
+          };
           $scope.recipe.ingredients[ingredient].amount = scaleFactor * $scope.recipe.ingredients[ingredient].amount;
-          $scope.writeNutrientData($scope.ingredients[ingredient].nutrient, $scope.nutrients[$scope.ingredients[ingredient].nutrient].name, $scope.nutrients[$scope.ingredients[ingredient].nutrient].amount - $scope.recipe.ingredients[ingredient].amount, $scope.nutrients[$scope.ingredients[ingredient].nutrient].unit);
+          $scope.writeNutrientData($scope.ingredients[ingredient].nutrient, nutrient.name, nutrient.amount - $scope.recipe.ingredients[ingredient].amount, nutrient.unit);
+          nutrient.history.push(event);
+          firebase.database().ref('nutrients/' + $scope.ingredients[ingredient].nutrient).set({
+           name: nutrient.name,
+           amount: nutrient.amount,
+           unit: nutrient.unit,
+           owner: SessionService.email,
+           history: nutrient.history
+          });
         };
         $scope.writeMixData($scope.mix.id, name, amount, unit, $scope.recipe);
 
@@ -265,14 +294,43 @@ angular
       });
 
     $scope.increaseNutrientData = (id, name, amount, unit) => {
+      var event = {
+        action: "INCREASE",
+        amount: amount,
+        unit: unit,
+        owner: SessionService.email,
+        date: moment().format()
+      }
+      $scope.nutrient.history.push(event)
       $scope.nutrient.amount = $scope.nutrient.amount + amount;
       firebase.database().ref('nutrients/' + id).set({
        name: name,
        amount: $scope.nutrient.amount,
        unit: unit,
-       owner: SessionService.email
+       owner: SessionService.email,
+       history: $scope.nutrient.history
       });
     }
+
+    $scope.viewHistory = (nutrient) => {
+      $state.go('nutrientHistory', {id: nutrient})
+    }
+
+  }])
+  .controller('NutrientHistoryController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
+
+    if (!SessionService.session) {
+      $state.go('aboutUs');
+    }
+
+    $scope.id = $stateParams.id;
+
+    FirebaseService.get('nutrients')
+      .then((response)=>{
+        $scope.nutrients = response;
+        $scope.nutrient = $scope.nutrients[$stateParams.id];
+        $scope.$apply();
+      });
 
   }])
   .controller('MainController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
@@ -387,11 +445,21 @@ angular
     }
 
     $scope.writeNutrientData = function(id, name, amount, unit) {
+      var history = [
+        {
+          action: "CREATE",
+          amount: amount,
+          unit: unit,
+          owner: SessionService.email,
+          date: moment().format()
+        }
+      ]
       database.ref('nutrients/' + id).set({
        name: name,
        amount: amount,
        unit: unit,
-       owner: SessionService.email
+       owner: SessionService.email,
+       history: history
       });
       $scope.genUuid('nutrient');
     }

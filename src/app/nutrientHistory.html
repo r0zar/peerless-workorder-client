@@ -1,0 +1,88 @@
+<div ng-controller="NutrientHistoryController" class="main-container">
+  <fountain-header></fountain-header>
+  <main class="main">
+
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">{{nutrient.name}}</h1>
+        <p class="lead">{{nutrient.amount | number:2}} {{nutrient.unit}}.</p>
+      </div>
+    </div>
+
+    <ul class="timeline">
+      <div ng-repeat="event in nutrient.history">
+        <li ng-if="event.action=='CREATE'">
+          <div class="timeline-badge primary"><i class="fa fa-check" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Nutrient added to resource list</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>{{event.amount | number:2}} {{event.unit}} of {{nutrient.name}} was added to your resource list.</p>
+            </div>
+          </div>
+        </li>
+        <li ng-if="event.action=='MIX'" class="timeline-inverted">
+          <div class="timeline-badge warning"><i class="fa fa-minus" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Used to create {{event.mix.name}}</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>{{event.amount | number:2}} {{event.unit}} of {{nutrient.name}} was used to create {{event.mix.name}}.</p>
+            </div>
+          </div>
+        </li>
+        <li ng-if="event.action=='INCREASE'">
+          <div class="timeline-badge success"><i class="fa fa-plus" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Total amount increased</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>You added {{event.amount | number:2}} {{event.unit}} of {{nutrient.name}}.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+      <!--
+      <li class="timeline-inverted">
+        <div class="timeline-badge warning"><i class="fa fa-minus" aria-hidden="true"></i></div>
+        <div class="timeline-panel">
+          <div class="timeline-heading">
+            <h4 class="timeline-title">5g used to create Week 1 Feed</h4>
+            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 14 days ago via Mix Tracker</small></p>
+          </div>
+          <div class="timeline-body">
+            <p>On Tuesday, December 13th, 2016 you used 5g of Chocolate Chips to to create Week 1 Feed.</p>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="timeline-badge success"><i class="fa fa-plus" aria-hidden="true"></i></div>
+        <div class="timeline-panel">
+          <div class="timeline-heading">
+            <h4 class="timeline-title">Amount increased by 10g</h4>
+            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 7 hours ago via Mix Tracker</small></p>
+          </div>
+          <div class="timeline-body">
+            <p>On Tuesday, December 20th, 2016 you added 10g of Chocolate Chips.</p>
+          </div>
+        </div>
+      </li>
+      -->
+    </ul>
+
+  </main>
+  <fountain-footer></fountain-footer>
+  <!--
+<pre>
+nutrient = {{nutrient | json}}
+
+nutrients = {{nutrients | json}}
+</pre>
+-->
+</div>

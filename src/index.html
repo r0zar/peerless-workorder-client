@@ -29,6 +29,10 @@
 
   <!-- Angular Material Library -->
   <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  <!-- load momentJS (required for angular-moment) -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+  <!-- load angular-moment -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-moment/0.9.0/angular-moment.min.js"></script>
   <script>
     // Initialize Firebase
     var config = {
@@ -39,6 +43,17 @@
       messagingSenderId: "145605078788"
     };
     firebase.initializeApp(config);
+  </script>
+  <!-- Hotjar Tracking Code for http://mix-tracker.radlaboratories.org -->
+  <script>
+      (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:355049,hjsv:5};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+      })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
     <ui-view></ui-view>
   </body>

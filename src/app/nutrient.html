@@ -6,6 +6,7 @@
       <div class="container">
         <h1 class="display-4">{{nutrient.name}}</h1>
         <p class="lead">{{nutrient.amount | number:2}} {{nutrient.unit}}.</p>
+        <input class="btn btn-default" ng-click="viewHistory(id)" value="View History" />
       </div>
     </div>
 
