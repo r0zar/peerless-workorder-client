@@ -5,9 +5,30 @@
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-4">{{nutrient.name}}</h1>
-        <p class="lead">{{nutrient.amount}} {{nutrient.unit}}.</p>
+        <p class="lead">{{nutrient.amount | number:2}} {{nutrient.unit}}.</p>
       </div>
     </div>
+
+    <md-card md-theme="default" md-theme-watch>
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Increase amount</span>
+          <span class="md-subhead">
+          <form>
+            <div class="form-group">
+              <label class="card-title">Amount: </label>
+              <input type="number" class="form-control" ng-model="amount" />
+            </div>
+            <div class="form-group">
+              <input type="radio" name="unit" ng-model="unit" value="g" checked> g
+              <input type="radio" name="unit" ng-model="unit" value="mL"> mL
+            </div>
+            <input type="submit" class="btn btn-primary" ng-click="increaseNutrientData(id, nutrient.name, amount, unit)" value="Increase" />
+          </form>
+          </span>
+        </md-card-title-text>
+      </md-card-title>
+    </md-card>
 
 
   </main>

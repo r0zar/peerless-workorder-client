@@ -9,9 +9,14 @@
             <md-card-title-text>
               <span class="md-headline">{{nutrient.name}}</span>
               <span class="md-subhead">
-                {{nutrient.amount}} {{nutrient.unit}}.
+                {{nutrient.amount | number:2}} {{nutrient.unit}}.
               </span>
             </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm card-media">
+              <img ng-src="https://d30y9cdsu7xlg0.cloudfront.net/png/246913-200.png" height="100%">
+            </div>
+          </md-card-title-media>
           </md-card-title>
         </md-card>
 
@@ -20,12 +25,28 @@
             <md-card-title-text>
               <span class="md-headline">{{recipe.name}}</span>
               <span class="md-subhead" ng-repeat="ingredient in recipe.ingredients">
-                {{ingredient.amount}} {{ingredient.unit}} of {{ingredient.name}}.
+                {{ingredient.amount | number:2}} {{ingredient.unit}} of {{ingredient.name}}.
               </span>
             </md-card-title-text>
           <md-card-title-media>
             <div class="md-media-sm card-media">
-              <img ng-src="https://d30y9cdsu7xlg0.cloudfront.net/png/82540-200.png" height="100%">
+              <img ng-src="https://www.tsl.texas.gov/sites/default/files/public/tslac/slrm/landingpage/forms.png" height="100%">
+            </div>
+          </md-card-title-media>
+          </md-card-title>
+        </md-card>
+
+        <md-card ng-repeat="(key, mix) in mixes" md-theme="default" md-theme-watch>
+          <md-card-title ng-click="goToMix(key)">
+            <md-card-title-text>
+              <span class="md-headline">{{mix.name}}</span>
+              <span class="md-subhead">
+                {{mix.amount | number:2}} {{mix.unit}} of {{mix.recipe.name}}.
+              </span>
+            </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm card-media">
+              <img ng-src="https://openclipart.org/image/800px/svg_to_png/203314/chemical.png" height="100%">
             </div>
           </md-card-title-media>
           </md-card-title>
@@ -46,10 +67,10 @@
                     <input type="number" class="form-control" ng-model="nutrient.amount" />
                   </div>
                   <div class="form-group">
-                    <input type="radio" name="unit" ng-model="nutrient.unit" value="grams" checked> g
-                    <input type="radio" name="unit" ng-model="nutrient.unit" value="milliliters"> mL
+                    <input type="radio" name="unit" ng-model="nutrient.unit" value="g" checked> g
+                    <input type="radio" name="unit" ng-model="nutrient.unit" value="mL"> mL
                   </div>
-                    <input type="submit" class="btn btn-primary" ng-click="writeNutrientData(nutrient.id, nutrient.name, nutrient.amount, nutrient.unit)" value="Save" />
+                    <input type="submit" class="btn btn-primary" ng-click="writeNutrientData(nutrient.id, nutrient.name, nutrient.amount, nutrient.unit)" value="Add" />
                 </form>
               </span>
             </md-card-title-text>
@@ -66,7 +87,7 @@
                   <label class="card-title">Name: </label>
                   <input type="text" class="form-control" ng-model="recipe.name" />
                 </div>
-                  <input type="submit" class="btn btn-primary" ng-click="writeRecipeData(recipe.id, recipe.name)" value="Save" />
+                  <input type="submit" class="btn btn-primary" ng-click="writeRecipeData(recipe.id, recipe.name)" value="Create" />
               </form>
               </span>
             </md-card-title-text>
@@ -79,7 +100,7 @@
   </main>
 
   <fountain-footer></fountain-footer>
-<!--
+  <!--
 <pre>
 recipe = {{recipe | json}}
 

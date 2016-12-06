@@ -2,12 +2,12 @@
   <fountain-header></fountain-header>
   <main class="main">
 
-    <div class="jumbotron jumbotron-fluid">
+    <div id="recipe" class="jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-4">{{recipe.name}}</h1>
         <ul>
           <li ng-repeat="ingredient in recipe.ingredients">
-            <p class="lead">{{ingredient.amount}} {{ingredient.unit}} of {{ingredient.name}}.</p>
+            <p class="lead">{{ingredient.amount | number:2}} {{ingredient.unit}} of {{ingredient.name}}.</p>
           </li>
         </ul>
       </div>
@@ -30,10 +30,10 @@
               <input type="number" class="form-control" ng-model="ingredient.amount" />
             </div>
             <div class="form-group">
-              <input type="radio" name="unit" ng-model="ingredient.unit" value="grams" checked> g
-              <input type="radio" name="unit" ng-model="ingredient.unit" value="milliliters"> mL
+              <input type="radio" name="unit" ng-model="ingredient.unit" value="g" checked> g
+              <input type="radio" name="unit" ng-model="ingredient.unit" value="mL"> mL
             </div>
-            <input type="submit" class="btn btn-primary" ng-click="writeIngredientData(ingredient.id, ingredient.nutrient, ingredient.amount, ingredient.unit)" value="Save" />
+            <input type="submit" class="btn btn-primary" ng-click="writeIngredientData(ingredient.id, ingredient.nutrient, ingredient.amount, ingredient.unit)" value="Add" />
           </form>
           </span>
         </md-card-title-text>
@@ -43,21 +43,42 @@
     <md-card md-theme="default" md-theme-watch>
       <md-card-title>
         <md-card-title-text>
-          <span class="md-headline">Calculate a Mix</span>
+          <span class="md-headline">Remove an Ingredient</span>
           <span class="md-subhead">
           <form>
+            <div class="form-group">
+              <label class="card-title">Nutrient: </label>
+              <select class="form-control" ng-model="ingredient.nutrient">
+                <option ng-repeat="(key, value) in recipe.ingredients" value="{{key}}">{{value.name}}</option>
+              </select>
+            </div>
+            <input type="submit" class="btn btn-primary" ng-click="removeIngredientData(ingredient.nutrient)" value="Remove" />
+          </form>
+          </span>
+        </md-card-title-text>
+      </md-card-title>
+    </md-card>
+
+    <md-card md-theme="default" md-theme-watch>
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Create a Mix</span>
+          <span class="md-subhead">
+          <form>
+            <div class="form-group">
+              <label>Name: </label>
+              <input type="text" class="form-control" ng-model="mix.name" />
+            </div>
             <div class="form-group">
               <label>Amount: </label>
               <input class="form-control" type="number" ng-model="recipe.amount" />
             </div>
             <div class="form-group">
-              <input type="radio" name="unit" ng-model="recipe.unit" value="grams" checked> g
-              <input type="radio" name="unit" ng-model="recipe.unit" value="millileters"> mL
+              <input type="radio" name="unit" ng-model="recipe.unit" value="g" checked> g
+              <input type="radio" name="unit" ng-model="recipe.unit" value="mL"> mL
             </div>
-<pre>
-recipe = {{recipe | json}}
-</pre>
-            <input type="submit" class="btn btn-primary" ng-click="calculateRecipeData(recipe.amount, recipe.unit)" value="Calculate" />
+            <input type="submit" class="btn btn-default" ng-click="calculateRecipeData(recipe.amount, recipe.unit)" value="Calculate" />
+            <input type="submit" class="btn btn-primary" ng-click="createMixData(mix.name, recipe.amount, recipe.unit)" value="Create" />
           </form>
           </span>
         </md-card-title-text>
@@ -67,11 +88,13 @@ recipe = {{recipe | json}}
 
   </main>
   <fountain-footer></fountain-footer>
-<!-- DEBUG INFO
+  <!--
 <pre>
 recipe = {{recipe | json}}
 
 ingredient = {{ingredient | json}}
+
+mix = {{mix | json}}
 
 nutrients = {{nutrients | json}}
 
