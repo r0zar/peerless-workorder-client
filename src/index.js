@@ -13,6 +13,7 @@ import {nutrient} from './app/nutrient';
 import {recipe} from './app/recipe';
 import {mix} from './app/mix';
 import {nutrientHistory} from './app/nutrientHistory';
+import {mixHistory} from './app/mixHistory';
 import {header} from './app/header';
 import {title} from './app/title';
 import {footer} from './app/footer';
@@ -75,10 +76,31 @@ angular
   .component('recipe', recipe)
   .component('mix', mix)
   .component('nutrientHistory', nutrientHistory)
+  .component('mixHistory', mixHistory)
   .component('fountainHeader', header)
   .component('fountainTitle', title)
   .component('fountainFooter', footer)
   .controller('MixController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
+
+    if (!SessionService.session) {
+      $state.go('aboutUs');
+    }
+
+    $scope.id = $stateParams.id;
+
+    FirebaseService.get('mixes')
+      .then((response)=>{
+        $scope.mixes = response;
+        $scope.mix = $scope.mixes[$stateParams.id];
+        $scope.$apply();
+      });
+
+    $scope.viewHistory = (mix) => {
+      $state.go('mixHistory', {id: mix});
+    }
+
+  }])
+  .controller('MixHistoryController', ['$scope', '$state', '$stateParams', 'uuid', 'SessionService', 'FirebaseService', ($scope, $state, $stateParams, uuid, SessionService, FirebaseService) => {
 
     if (!SessionService.session) {
       $state.go('aboutUs');
