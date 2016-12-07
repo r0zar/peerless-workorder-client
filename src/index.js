@@ -283,11 +283,10 @@ angular
             date: moment().format()
           };
           $scope.recipe.ingredients[ingredient].amount = scaleFactor * $scope.recipe.ingredients[ingredient].amount;
-          $scope.writeNutrientData($scope.ingredients[ingredient].nutrient, nutrient.name, nutrient.amount - $scope.recipe.ingredients[ingredient].amount, nutrient.unit);
           nutrient.history.push(event);
           firebase.database().ref('nutrients/' + $scope.ingredients[ingredient].nutrient).set({
            name: nutrient.name,
-           amount: nutrient.amount,
+           amount: nutrient.amount - $scope.recipe.ingredients[ingredient].amount,
            unit: nutrient.unit,
            owner: SessionService.email,
            history: nutrient.history
