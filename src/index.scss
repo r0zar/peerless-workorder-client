@@ -104,14 +104,18 @@ md-card {
 .footer {
   padding: 0.5rem;
   font-size: 1rem;
-  background-color: #fff9f0;
+  background-color: #1f1f1f;
   text-align: center;
-  color: black;
+  color: white;
 }
 
 
 .header-title-img {
  height: 80px;
+}
+
+.menu-choice {
+  padding-left: 10px;
 }
 
 .menu-choice:hover {
@@ -316,10 +320,16 @@ md-card {
   .header-title-img {
    height: 40px;
   }
+  .footer {
+    font-size: 0.8rem;
+  }
  }
 
 @media only screen and (max-width : 420px) {
   .header-title-img {
    height: 30px;
+  }
+  .footer {
+    font-size: 0.46rem;
   }
  }

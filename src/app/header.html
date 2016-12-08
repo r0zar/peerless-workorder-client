@@ -1,10 +1,27 @@
-<header ng-controller="HeadController" class="header navbar navbar-dark bg-inverse">
-  <p class="header-title" ng-click="goHome()">
-      Mix Tracker
-  </p>
-  <row>
-    <p class="header-date">
-    <button ng-show="session.active" type="button" class="btn btn-default" style="width: 100%;" ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
-    </p>
-  </row>
+<header ng-controller="HeadController">
+  <div class="navbar navbar-app navbar-absolute-top navbar-inverse">
+
+  <div class="navbar-brand navbar-brand-center header-title" ng-click="goHome()">
+    <i class="fa fa-flask" aria-hidden="true"></i> Mix Tracker
+  </div>
+
+  <div class="btn-group pull-left">
+    <div class="btn btn-navbar">
+
+    </div>
+  </div>
+
+  <div class="btn-group pull-right">
+    <div class="btn btn-navbar">
+      <div ng-show="session.active" class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="margin-top: 7px">
+          <i class="fa fa-cog" aria-hidden="true"></i>
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li ng-click="logout()"><div class="menu-choice"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign out</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 </header>
