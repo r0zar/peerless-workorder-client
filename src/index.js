@@ -207,6 +207,7 @@ angular
           owner: SessionService.email,
           history: $scope.recipe.history
         });
+        // TODO: create an ADD/REMOVE event for the nutrient showing its link/unlink in the recipe?
       }
 
       $scope.writeNutrientData = function(id, name, amount, unit) {
