@@ -10,6 +10,7 @@
             <p class="lead">{{ingredient.amount | number:2}} {{ingredient.unit}} of {{ingredient.name}}.</p>
           </li>
         </ul>
+        <button class="btn btn-default" ng-click="viewHistory(id)">View History</button>
       </div>
     </div>
 
@@ -88,7 +89,6 @@
 
   </main>
   <fountain-footer></fountain-footer>
-  <!--
 <pre>
 recipe = {{recipe | json}}
 
@@ -104,5 +104,4 @@ recipes = {{recipes | json}}
 
 mixes = {{mixes | json}}
 </pre>
--->
 </div>

@@ -1,0 +1,86 @@
+<div ng-controller="RecipeHistoryController" class="main-container">
+  <fountain-header></fountain-header>
+  <main class="main">
+
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">{{recipe.name}}</h1>
+        <ul>
+          <li ng-repeat="ingredient in recipe.ingredients">
+            <p class="lead">{{ingredient.amount | number:2}} {{ingredient.unit}} of {{ingredient.name}}.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ul class="timeline">
+      <div ng-repeat="event in recipe.history">
+        <li ng-if="event.action=='CREATE'">
+          <div class="timeline-badge primary"><i class="fa fa-check" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Recipe added to resource list</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>{{recipe.name}} was added to your resource list.</p>
+            </div>
+          </div>
+        </li>
+        <li ng-if="event.action=='ADD'">
+          <div class="timeline-badge primary"><i class="fa fa-plus" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Ingredient added to recipe</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>You added {{event.amount | number:2}} {{event.unit}} of {{event.nutrient.name}} to the recipe.</p>
+            </div>
+          </div>
+        </li>
+        <li ng-if="event.action=='REMOVE'">
+          <div class="timeline-badge primary"><i class="fa fa-minus" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Ingredient removed from recipe</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>You removed {{event.amount | number:2}} {{event.unit}} of {{event.nutrient.name}} from the recipe.</p>
+            </div>
+          </div>
+        </li>
+        <li ng-if="event.action=='MIX'" class="timeline-inverted">
+          <div class="timeline-badge success"><i class="fa fa-plus" aria-hidden="true"></i></div>
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">Mix created from this recipe</h4>
+              <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> On {{event.date | date:'medium'}}</small></p>
+            </div>
+            <div class="timeline-body">
+              <p>{{event.amount | number:2}} {{event.unit}} of {{event.mix.name}} was created from this recipe.</p>
+            </div>
+          </div>
+        </li>
+      </div>
+    </ul>
+
+  </main>
+  <fountain-footer></fountain-footer>
+  <!--
+<pre>
+nutrient = {{nutrient | json}}
+
+nutrients = {{nutrients | json}}
+
+ingredient = {{ingredient | json}}
+
+ingredients = {{ingredients | json}}
+
+recipe = {{recipe | json}}
+
+recipes = {{recipes | json}}
+</pre>
+-->
+</div>
