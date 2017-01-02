@@ -21,7 +21,6 @@ import {footer} from './app/footer';
 
 import './index.scss';
 import 'angular-uuid';
-import 'angular-animate';
 import 'angular-ui-bootstrap';
 import 'moment';
 
